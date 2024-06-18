@@ -1,0 +1,37 @@
+schemaVersion: 2.2.2
+metadata:
+  name: my-sample-devfile
+  version: 1.0.0
+  description: "A sample devfile to demonstrate ConfigMap mounting"
+
+components:
+- name: cm-config-volume
+  openshift:
+    deployByDefault: true
+    inlined: |
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: my-configmap
+      data:
+        demo.txt: |
+          key1=value1
+          key2=value2
+- name: my-container
+  pod-overrides:
+    spec:
+      volumes: 
+      - name: demo-config-map
+        configMap:
+          name: my-configmap
+          items:
+          - key: demo.txt
+            path: demo.txt
+  container-overrides:
+    volumeMounts:
+    - mountPath: /projects/config-map
+      name: demo-config-map
+  container:
+    image: quay.io/cgruver0/che/dev-tools:latest
+    memoryLimit: 512Mi
+    mountSources: true
