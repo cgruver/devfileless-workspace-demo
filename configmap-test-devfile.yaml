@@ -18,19 +18,21 @@ components:
           key1=value1
           key2=value2
 - name: my-container
-  pod-overrides:
-    spec:
-      volumes: 
-      - name: demo-config-map
-        configMap:
-          name: my-configmap
-          items:
-          - key: demo.txt
-            path: demo.txt
-  container-overrides:
-    volumeMounts:
-    - mountPath: /projects/config-map
-      name: demo-config-map
+  attributes:
+    pod-overrides:
+      spec:
+        volumes: 
+        - name: demo-config-map
+          configMap:
+            name: my-configmap
+            items:
+            - key: demo.txt
+              path: demo.txt
+    container-overrides:
+      volumeMounts:
+      - mountPath: /projects/config-map
+        name: demo-config-map
+        readOnly: true
   container:
     image: quay.io/cgruver0/che/dev-tools:latest
     memoryLimit: 512Mi
